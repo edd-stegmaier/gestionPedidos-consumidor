@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.duoc.gestionpedidos.model.GuiaDespachoEntity;
+import com.duoc.gestionpedidos.repository.GuiaDespachoEmitidaRepository;
+import com.duoc.gestionpedidos.model.GuiaDespachoEmitida;
 
 @Service
 public class FileService {
@@ -20,6 +22,9 @@ public class FileService {
 
     @Autowired
     private EfsService efsService;
+
+    @Autowired
+    private GuiaDespachoEmitidaRepository guiaDespachoEmitidaRepository;
 
     // Generar Guia de Despacho como Bytes
     public byte[] generarGuiaFile(GuiaDespachoEntity guiaDespacho) throws Exception{
@@ -62,6 +67,11 @@ public class FileService {
         
         byte[] archivo = generarGuiaFile(guiaDespacho);
         String key = generarGuiaS3Key(guiaDespacho);
+
+        GuiaDespachoEmitida guiaEmitida = new GuiaDespachoEmitida();
+        guiaEmitida.setContenido(archivo);
+
+        guiaDespachoEmitidaRepository.save(guiaEmitida);
 
         s3Service.upload(S3bucket, key, archivo);
         efsService.saveToEfs(key, archivo);
