@@ -1,5 +1,7 @@
 package com.duoc.gestionpedidos.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import com.duoc.gestionpedidos.dto.GuiaDespachoRequestDTO;
@@ -83,9 +85,9 @@ public class GuiaDespachoController {
     @GetMapping("/fecha/{fecha}")
     public ResponseEntity<List<GuiaDespachoResponseDTO>> obtenerGuiasPorFecha(@PathVariable String fecha){
         try {
-            java.time.Date localDate = java.time.Date.parse(fecha);
-            return ResponseEntity.ok(guiaDespachoService.obtenerGuiaDeDespachoFecha(localDate));
-        } catch (java.time.format.DateTimeParseException e) {
+            java.util.Date date = new SimpleDateFormat("yyyy-MM-dd").parse(fecha);
+            return ResponseEntity.ok(guiaDespachoService.obtenerGuiaDeDespachoFecha(date));
+        } catch (ParseException e) {
             return ResponseEntity.badRequest().build();
         }
     }
