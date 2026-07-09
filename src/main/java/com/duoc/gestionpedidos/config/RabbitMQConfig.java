@@ -7,14 +7,10 @@ import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
-import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Configuration
 public class RabbitMQConfig {
@@ -39,8 +35,8 @@ public class RabbitMQConfig {
     private String password;
 
     @Bean
-    Jackson2JsonMessageConverter messageConverter(ObjectMapper objectMapper) {
-        return new Jackson2JsonMessageConverter(objectMapper);
+    Jackson2JsonMessageConverter messageConverter( ) {
+        return new Jackson2JsonMessageConverter();
     }
 
     @Bean
@@ -82,23 +78,5 @@ public class RabbitMQConfig {
     @Bean
     Binding dlxBinding() {
         return BindingBuilder.bind(dlxQueue()).to(dlxExchange()).with(DLX_ROUTING_KEY);
-    }
-
-    @Bean
-    RabbitTemplate rabbitTemplate(CachingConnectionFactory connectionFactory,
-            Jackson2JsonMessageConverter messageConverter) {
-        RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
-        rabbitTemplate.setMessageConverter(messageConverter);
-        return rabbitTemplate;
-    }
-
-    @Bean
-    SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory(
-            CachingConnectionFactory connectionFactory,
-            Jackson2JsonMessageConverter messageConverter) {
-        SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
-        factory.setConnectionFactory(connectionFactory);
-        factory.setMessageConverter(messageConverter);
-        return factory;
     }
 }
