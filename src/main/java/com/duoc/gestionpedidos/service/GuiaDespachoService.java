@@ -66,6 +66,10 @@ public class GuiaDespachoService {
 
     // crear nueva guia de despacho
     public GuiaDespachoResponseDTO crearGuiaDeDespacho(GuiaDespachoRequestDTO guiaDespachoRequestDTO){
+        if (!validarDatosGuiaDespacho(guiaDespachoRequestDTO)) {
+            throw new IllegalArgumentException("Datos de guia de despacho inválidos");
+        }
+
         GuiaDespachoEntity guiaDespacho = toEntity(guiaDespachoRequestDTO);
         GuiaDespachoResponseDTO nuevaGuia = toDTO(guiaDespachoRepository.save(guiaDespacho));
         
