@@ -16,6 +16,9 @@ public class GuiaDespachoEmitida {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    @Column(name = "contenido", nullable = false, columnDefinition = "BLOB")
     private byte[] contenido;
 
 
