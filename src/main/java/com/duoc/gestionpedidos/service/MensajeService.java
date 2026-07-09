@@ -66,8 +66,13 @@ public class MensajeService {
     public void recibirGuiaDespacho(@Payload GuiaDespachoRequestDTO guiaDespachoRequestDTO, Message mensaje, Channel canal) throws IOException {
 
         try{ 
-            log.info("Mensaje recibido: " +  new String(mensaje.getBody()));
+            String body = new String(mensaje.getBody());
+            log.info("Mensaje recibido: " +  body);
             Thread.sleep(5000);
+
+            if (body.contains("error")) {
+				throw new RuntimeException("Error forzado para probar la DLQ");
+			}
 
             GuiaDespachoResponseDTO nuevaGuia = guiaDespachoService.crearGuiaDeDespacho(guiaDespachoRequestDTO);
 
@@ -77,9 +82,10 @@ public class MensajeService {
                 canal.basicAck(mensaje.getMessageProperties().getDeliveryTag(), false);
                 log.info("Acknowledge OK enviado.");
                 return;
+            } else {
+                throw new RuntimeException("La guia de despacho recibida no pudo ser procesada");
             }
 
-            log.info("La guia de despacho recibida no pudo ser procesada");
         } catch (Exception e) {
             log.error("Error al procesar la guia de despacho: {}", e.getMessage());
 
