@@ -77,6 +77,17 @@ public class GuiaDespachoService {
         return nuevaGuia;
     }
 
+    // Validar datos de guia de despacho
+    public boolean validarDatosGuiaDespacho(GuiaDespachoRequestDTO guiaDespachoRequestDTO){
+        if(guiaDespachoRequestDTO.getProductoId() == null || guiaDespachoRequestDTO.getClienteId() == null || guiaDespachoRequestDTO.getEmpleadoId() == null || guiaDespachoRequestDTO.getFecha() == null){
+            return false;
+        }
+        if(!productoRepository.existsById(guiaDespachoRequestDTO.getProductoId()) || !clienteRepository.existsById(guiaDespachoRequestDTO.getClienteId()) || !empleadoRepository.existsById(guiaDespachoRequestDTO.getEmpleadoId())){
+            return false;
+        }
+        return true;
+    }
+
     // editar guia de despacho 
     public GuiaDespachoResponseDTO actualizarGuiaDeDespacho(Long id, GuiaDespachoRequestDTO guiaDespachoDTO){
         return guiaDespachoRepository.findById(id).map( guia -> {
