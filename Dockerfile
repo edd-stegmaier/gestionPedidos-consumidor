@@ -18,7 +18,7 @@ ENV DB_WALLET_PATH=/opt/oracle/wallet
 RUN mkdir -p /opt/oracle/wallet
 RUN mkdir -p /app/efs
 
-COPY --from=buildstage /app/target/gestionPedidos-1.2.0.jar /app/app.jar
+COPY --from=buildstage /app/target/gestionPedidos-1.3.0.jar /app/app.jar
 
 EXPOSE 8080
 

@@ -27,12 +27,12 @@ jobs:
       # Construir la imagen de Docker
       - name: Build Docker Image
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/my-app:latest .
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/gp-consumidor:latest .
 
       # Hacer push de la imagen a DockerHub
       - name: Push Docker Image
         run: |
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/my-app:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/gp-consumidor:latest
           
      # Configurar credenciales de AWS para SSH, incluyendo AWS_SESSION_TOKEN
       - name: Set up AWS credentials
@@ -57,18 +57,24 @@ jobs:
             # Autenticar en DockerHub desde EC2
             echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
             # Descargar la última versión de la imagen
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/my-app:latest
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/gp-consumidor:latest
             # Parar y eliminar cualquier contenedor previo
-            docker rm -f my-app 2>/dev/null || true
+            docker rm -f gp-consumidor 2>/dev/null || true
+            # Levantar RabbitMQ
+            docker-compose -f ./rabbitmq/docker-compose.yml up -d
             # Iniciar el contenedor
-            docker run -d --name my-app -p 8080:8080 \
+            docker run -d --name gp-consumidor --network rabbitmq -p 8080:8080 \
               -e DB_USERNAME='${{ secrets.DB_USERNAME }}' \
               -e DB_PASSWORD='${{ secrets.DB_PASSWORD }}' \
+              -e RABBITMQ_HOST='rabbitmq' \
+              -e RABBITMQ_PORT='5672' \
+              -e RABBITMQ_USERNAME='guest' \
+              -e RABBITMQ_PASSWORD='guest' \
               -e AWS_ACCESS_KEY_ID='${{ secrets.AWS_ACCESS_KEY_ID }}' \
               -e AWS_SECRET_ACCESS_KEY='${{ secrets.AWS_SECRET_ACCESS_KEY }}' \
               -e AWS_SESSION_TOKEN='${{ secrets.AWS_SESSION_TOKEN }}' \
               -e AWS_REGION='us-east-1' \
               -v /opt/oracle/wallet:/opt/oracle/wallet:ro \
               -v /home/ec2-user/efs:/app/efs \
-              ${{ secrets.DOCKERHUB_USERNAME }}/my-app:latest
+                ${{ secrets.DOCKERHUB_USERNAME }}/gp-consumidor:latest
           EOF
