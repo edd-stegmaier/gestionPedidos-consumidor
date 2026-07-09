@@ -1,5 +1,6 @@
 package com.duoc.gestionpedidos.service;
 
+import java.text.SimpleDateFormat;
 import java.nio.charset.StandardCharsets;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +52,7 @@ public class FileService {
     private String generarGuiaS3Key(GuiaDespachoEntity guiaDespacho){
         String transportistaId = guiaDespacho.getEmpleado().getId().toString();
         String guiaId = guiaDespacho.getId().toString();
-        String fecha = Integer.toString(guiaDespacho.getFecha().getYear()).concat(Integer.toString(guiaDespacho.getFecha().getMonthValue()));
+        String fecha = new SimpleDateFormat("yyyyMM").format(guiaDespacho.getFecha());
 
         return fecha.concat("/").concat("transportista").concat(transportistaId)
             .concat("/").concat("guia").concat(guiaId).concat(".txt");

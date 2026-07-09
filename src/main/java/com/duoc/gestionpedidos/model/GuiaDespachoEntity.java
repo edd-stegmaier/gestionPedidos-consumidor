@@ -1,6 +1,6 @@
 package com.duoc.gestionpedidos.model;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -31,6 +31,6 @@ public class GuiaDespachoEntity {
     private EmpleadoEntity empleado;
 
     @Column(nullable = false)
-    private LocalDate fecha;
+    private Date fecha;
 
 }

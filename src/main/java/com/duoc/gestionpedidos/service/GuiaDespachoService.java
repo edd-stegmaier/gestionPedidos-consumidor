@@ -2,7 +2,7 @@ package com.duoc.gestionpedidos.service;
 
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 import com.duoc.gestionpedidos.repository.GuiaDespachoRepository;
@@ -60,7 +60,7 @@ public class GuiaDespachoService {
     }
 
     //buscar por fecha
-        public List<GuiaDespachoResponseDTO> obtenerGuiaDeDespachoFecha(LocalDate fecha){
+        public List<GuiaDespachoResponseDTO> obtenerGuiaDeDespachoFecha(Date fecha){
         return guiaDespachoRepository.findByFecha(fecha).stream().map(this::toDTO).toList();
     }
 

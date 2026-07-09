@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.time.LocalDate;
+import java.util.Date;
 
 @Data
 @NoArgsConstructor
@@ -21,6 +21,6 @@ public class GuiaDespachoRequestDTO {
     private Long empleadoId;
 
     @NotNull(message = "La fecha de despacho es obligatoria")
-    private LocalDate fecha;
+    private Date fecha;
 
 }

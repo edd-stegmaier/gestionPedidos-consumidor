@@ -83,7 +83,7 @@ public class GuiaDespachoController {
     @GetMapping("/fecha/{fecha}")
     public ResponseEntity<List<GuiaDespachoResponseDTO>> obtenerGuiasPorFecha(@PathVariable String fecha){
         try {
-            java.time.LocalDate localDate = java.time.LocalDate.parse(fecha);
+            java.time.Date localDate = java.time.Date.parse(fecha);
             return ResponseEntity.ok(guiaDespachoService.obtenerGuiaDeDespachoFecha(localDate));
         } catch (java.time.format.DateTimeParseException e) {
             return ResponseEntity.badRequest().build();

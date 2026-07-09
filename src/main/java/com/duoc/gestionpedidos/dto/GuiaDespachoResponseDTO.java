@@ -3,7 +3,7 @@ package com.duoc.gestionpedidos.dto;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Data;
-import java.time.LocalDate;
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -14,7 +14,7 @@ public class GuiaDespachoResponseDTO {
     private ProductoResponseDTO producto;
     private ClienteResponseDTO cliente;
     private EmpleadoResponseDTO empleado;
-    private LocalDate fecha;
+    private Date fecha;
     private String key;
 
 }
